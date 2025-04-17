@@ -196,7 +196,7 @@
                             <td class="border border-neutral-300 px-4 py-2 text-left">{{ $tamu->instansi }}</td>
                             <td class="border border-neutral-300 px-4 py-2">{{ $tamu->bertemu_dengan }}</td>
                             <td class="border border-neutral-300 px-4 py-2 text-left">{{ $tamu->keperluan }}</td>
-                            <td class="border border-neutral-300 px-4 py-2 text-left">{{ $tamu->tanggal }}</td>
+                            <td class="border border-neutral-300 px-4 py-2 text-left">{{ \Carbon\Carbon::parse($tamu->tanggal)->format('d M Y') }}</td>
                             <td class="border border-neutral-300 px-4 py-2 text-left">{{ $tamu->jam }}</td>
                         </tr>
                         @endforeach

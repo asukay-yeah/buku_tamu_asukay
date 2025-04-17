@@ -28,6 +28,11 @@
         .shadow-custom-img {
             box-shadow: 11px 11px 0px #171717;
         }
+
+        .notification-hidden {
+            opacity: 0;
+            transition: transform 0.9s ease;
+        }
     </style>
 </head>
 
@@ -36,6 +41,14 @@
     <div class="flex justify-center items-center my-10">
         <div
             class="w-full xl:mx-80 md:mx-40 mx-5 rounded-lg border-2 border-neutral-900 flex justify-center items-center flex-col px-7 bg-white shadow-custom-img">
+
+            @if(session('success'))
+            <div id="notification" class="bg-green-100 notification text-green-800 p-3 rounded mb-4 w-fit mt-5">{{ session('success') }}</div>
+            @endif
+            @if(session('error'))
+            <div id="notification" class="bg-red-100 notification text-red-800 p-3 rounded mb-4 w-fit mt-5">{{ session('error') }}</div>
+            @endif
+
             <div class="flex md:flex-row flex-col justify-center items-center md:gap-16 gap-8 mt-10">
                 <img src="../assets/balmonlogo.png"
                     class="w-40 bg-white md:block hidden border-2 border-neutral-900 rounded-md p-3 shadow-custom-logo"
@@ -76,12 +89,14 @@
                 <textarea placeholder="Keperluan Kunjungan" name="keperluan"
                     class="w-full p-3 border-2 border-neutral-900 ransition-all duration-200 focus:outline-none focus:ring-1 focus:ring-neutral-900 shadow-custom rounded col-span-2"
                     required></textarea>
-                <input type="date" name="tanggal"
-                    class="w-full p-3 border-2 border-neutral-900 ransition-all duration-200 focus:outline-none focus:ring-1 focus:ring-neutral-900 shadow-custom rounded"
+
+
+                <input type="date" name="tanggal" id="tanggal"
+                    class="w-full p-3 border-2 border-neutral-900 ransition-all duration-200 focus:outline-none focus:ring-1 focus:ring-neutral-900 shadow-custom rounded bg-[#f1f1f1] cursor-not-allowed"
                     required>
                 <div class="relative w-full">
-                    <input type="time" name="jam"
-                        class="w-full p-3 border-2 border-neutral-900 ransition-all duration-200 focus:outline-none focus:ring-1 focus:ring-neutral-900 shadow-custom rounded pr-10"
+                    <input type="time" name="jam" id="jam"
+                        class="w-full p-3 border-2 border-neutral-900 ransition-all duration-200 focus:outline-none focus:ring-1 focus:ring-neutral-900 shadow-custom rounded bg-[#f1f1f1] cursor-not-allowed pr-10"
                         required>
                     <span class="absolute inset-y-0 right-3 flex items-center text-gray-400">⏰</span>
                 </div>
@@ -160,6 +175,29 @@
             takePhoto.classList.add('hidden');
             stream.getTracks().forEach(track => track.stop());
         });
+
+        function autoCloseNotifications() {
+            setTimeout(() => {
+                document.querySelectorAll('#notification').forEach(notification => {
+                    notification.classList.add('opacity-0');
+                    setTimeout(() => notification.remove(),
+                    500); // Hapus elemen setelah animasi selesai
+                });
+            }, 3500);
+        }
+
+        // Panggil fungsi saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', autoCloseNotifications);
+
+
+        const now = new Date();
+        const tanggal = now.toISOString().split('T') [0];
+
+        const jam = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+
+        document.getElementById('tanggal').value = tanggal;
+        document.getElementById('jam').value = jam;
+        
     </script>
     <script src="../path/to/flowbite/dist/flowbite.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
